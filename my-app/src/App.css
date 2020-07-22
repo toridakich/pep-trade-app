@@ -1,0 +1,36 @@
+.App {
+  text-align: center;
+}
+
+body{
+  background-color: orange;
+}
+.teamBars{
+  
+  margin-top: 200px;
+  margin-left: 200px;
+  float: left;
+  
+  
+}
+
+.t2{
+  margin-top: 200px;
+  margin-right: 200px;
+  float: right;
+}
+
+.add{
+  padding: 30px;
+}
+
+.submit{
+  position: absolute;
+  top: 500px;
+  left: 660px;
+}
+
+#individies{
+  margin-bottom: 5px;
+}
+
