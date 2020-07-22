@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "peptradeapp",
+  "private_key_id": "6f666a7771dc48f7733799530f15ee3137559d89",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQC5te1ktMwS4B6P\nud7xJpPencoWKFVhkH4ec8Wgzeyok7Dj7enPomvOpLQno9vGwz6Ak15bcUgglKW4\njYMA2oCXp+XgOaS90iqIv/smz15/KdtzHoWDUFzkx21AxbE5rq55kZz+MI1kBeb/\nK6mmE29wFUtruJh7mQnPMXhQm2x/odBn4lRs/zPPROEUI0pyvsKJdfmxN9z76yoF\nn6PDjj0RWVt5HjfAvCCGXtDNicSrQutD5KheKlKLIleR9HvImkLkQK3ZBj2kwMoX\nEznzwTGv7+IPrpOUkk+n6SW0zID2GlA8cK9Y1wnO6hTFaI6HJsf9pKgUPy5xvdYZ\nD+IiKHVTAgMBAAECggEAC3H54nX+Cb/EQmlbIxOUk2i4Fqt/r5afHzNVX7axOiZ4\nBWQZP9GrwT2HWNYRamuIA5aRfyM5JcDjgb8+7qOIv0/6q9oBnC1Cr9DdIqQvF7k1\nrB+abOBcCUF9KzvD02E/oYBm44eMfziZ5uoC95hFCuxVDJuA0kU5RIqw9o7NngP4\n6NM/V6MTuLH9pPQ4E1Um+EtIZ8rHDJ2e9y6bDw6CMO9cWgHFQ0EOIKHJUeCgkjkx\nxhP+uLnVD9A43rWRkOjpSZXSKbutdq38BWe9Pp6EZKUJwBTBn1ajFSvwFc8HpaqS\nNdIaYdGL9OwEvSdN2bJ7YE/FUj6TP6LN80vgDGTRAQKBgQD1+1gIf0ymT0To6KDP\nDFc65rQg5pn54Poj2KHBiUX8k0/DSsizHqdBgToOgAY4tBpRc+LbKg4yKDAZEpnR\n+e0auDJAqUuj0OruJYGxtMFc3PQS7ynsVXgGvIOR7fpDoXN3ADPrq/ny1IB4oKdr\n2DMaq/jCicA+nUhKWYGvNvtHgQKBgQDBRi8kgyAuUIuD3hDF1sQs2CwYGvk7DfgW\nCKM7bXV9sPYub7yPaBEbgaGf6FwIA3g1diVfIG0kZuvc1IMFLIPRwDyVpwYjyZo8\nUq9YDZOS9cDGf+BCVhgKLvXx+nhl+lGLUF98HzWV1ttWuratXPpT1jGn7sXUf7bK\nzpaLIR+G0wKBgQCCNOjVnqTxR/afHzy4PL0T9bkVzVtmNRvTy8FcFBES8NuA8d4p\nSqmYeBJGSKiCbXuc8C3+e1WGYVWMgBciWhyTTztylOrwLQ+evgXYDmlogaFFQIo9\nisR9NF6k6YbXM+hN7rKNJrypOKlEsS3OXWQ30x5bw9Uaj+ELUjPejskWgQKBgQCz\n5ajxul+U3IHP3z4LeAknmJsKYOkFD86Qa7/MC+llcfbjaDvB2+K4kKOpHPW0u84D\nLRJCBgOw81+tL904TqPv85gwz8OGQhue9HOjaReonbiuys4p0MsVh3qDnli8yw9l\ntgz6km4lJ1UH2Ek6+qVCrceQgU6AqdOx2DMGE3Gt4wKBgCt/v31S+FzPoZ0qbG8j\nvASC4/X20t81cZcnpERsOy5+Afq/+tgf+7IHpQtQeacYmxLSj2p4Sph7rcOr4dqS\nJqK97wnlX1u0ukx/jN1PNf8tgATl0BAoI69bab7V7nbOXJaYx5St2AdCMhbEPV/g\n/7UwHahF1ZoZeppSV8gCiS5M\n-----END PRIVATE KEY-----\n",
+  "client_email": "warrencontract@peptradeapp.iam.gserviceaccount.com",
+  "client_id": "108811850818524698560",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/warrencontract%40peptradeapp.iam.gserviceaccount.com"
+}

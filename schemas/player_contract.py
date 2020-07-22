@@ -31,5 +31,7 @@ class PlayerContract(Schema):
         data['length'] = data['contract_length']
         if data['free_agent_year'] == '-':
             data['free_agent_year'] = 0
+        if data['value'] > 1000000000:
+            data['value'] = data['value']/ 1000000
         return data
     

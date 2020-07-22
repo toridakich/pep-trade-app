@@ -5,15 +5,26 @@ import time
 import shutil
 import getopt
 import sys
-from sqla_utils import ENGINE, BASE, get_session
+from models.sqla_utils import ENGINE, DEADLINEBASE, get_session
 import datetime
 from extract_fangraphs import extract_fangraphs
+from extract_game_data_by_year import extract_game_data_by_year, extract_roster
+from schemas.player import Player as p
+from models.player import Player
+from schemas.team import Team as t
+from models.team import Team
 
+team_set = set(['ANA', 'ARI', 'ATL', 'BAL', 'BOS', 'CHA', 'CHN', 'CIN', 'CLE', 'COL', 'DET', 'HOU',
+            'KCA', 'LAN', 'MIA', 'MIL', 'MIN', 'NYA', 'NYN', 'OAK', 'PHI', 'PIT', 'SEA',
+            'SFN', 'SLN', 'SDN', 'TBA', 'TEX', 'TOR', 'WAS'])
+
+
+MODELS = [Player, Team]
 def init(year):
-    pa_query = '''select * from plateappearance where year = ''' + year
-    game_query = '''select * from game where year = ''' + year
-    run_query = '''select * from run where year = ''' + year
-    br_query = '''select * from baserunningevent where year = ''' + year
+    pa_query = '''select * from PlateAppearance where year = ''' + year
+    game_query = '''select * from Game where year = ''' + year
+    run_query = '''select * from Run where year = ''' + year
+    br_query = '''select * from BaseRunningEvent where year = ''' + year
     print('plate_appearance')
     pa_start = time.time()
 
@@ -47,7 +58,7 @@ def init(year):
 
     return pa_data_df, game_data_df, run_data_df, br_data_df
 
-
+pa_data_df, game_data_df, run_data_df, br_data_df = init('2019')
 
 def extract_player_data_by_date(player, team, date, pa_data_df, game_data_df, run_data_df, br_data_df, woba_weights):
     '''
@@ -136,7 +147,7 @@ def extract_player_data_by_date(player, team, date, pa_data_df, game_data_df, ru
     player_dict['player_id'] = player
     player_dict['team'] = team
     player_dict['date'] = date
-    print(player_dict)
+    player_dict['year'] = date.year
     #player_dict['player_name'] = rosters[(player, team)]['player_first_name'] + ' ' + rosters[(player, team)]['player_last_name']
     return player_dict
 
@@ -164,6 +175,7 @@ def extract_team_data_by_date(team, date, pa_data_df, br_data_df, game_data_df, 
     team_scored_against = run_data_df.conceding_team == team
     infield_fly = (pa_data_df.hit_loc <= 6) & ((pa_data_df.ball_type == 'F') | (pa_data_df.ball_type == 'P'))
     team_dict['team'] = team
+    team_dict['year'] = date.year
     team_dict['date'] = date
     team_dict['W'] = game_data_df[(game_data_df.winning_team == team) & game_date].winning_team.count()
     team_dict['L'] = game_data_df[(game_data_df.losing_team == team) & game_date].losing_team.count()
@@ -243,7 +255,6 @@ def extract_team_data_by_date(team, date, pa_data_df, br_data_df, game_data_df, 
     team_dict['RpERA'] = (team_dict['RpER'] / team_dict['RpIP']) * 9
     team_dict['SpFIP'] = ((13 * start_hr) + (3 * start_bb) - (2 * start_k)) / (team_dict['SpIP'])
     team_dict['RpFIP'] = ((13 * relief_hr) + (3 * relief_bb) - (2 * relief_k))/(team_dict['RpIP'])
-    print(team_dict)
     return team_dict
 
 def query_player_data_by_date(date, player, team):
@@ -255,20 +266,71 @@ def query_player_data_by_date(date, player, team):
 
     extract_player_data_by_date(player, team, date, pa_data_df, game_data_df, run_data_df, br_data_df, woba_weights)
 
-def query_team_data_by_date(date, team):
+def query_team_data_by_date(date, team, rosters):
     year = str(date.year)
-    pa_data_df, game_data_df, run_data_df, br_data_df = init(year)
+    
 
     woba_df = extract_fangraphs()
     woba_weights = woba_df[woba_df.Season == int(year)]
+    player_dicts = []
+    for player in rosters.keys():
+        print(rosters[player])
+        player_dict = extract_player_data_by_date(player, team, date, pa_data_df, game_data_df, run_data_df, br_data_df, woba_weights)
+        player_dict['player_name'] = rosters[player]['player_first_name'] + ' ' + rosters[player]['player_last_name']
+        player_dicts.append(p().dump(player_dict))
+    parsed_team = t().dump(extract_team_data_by_date(team, date, pa_data_df, br_data_df, game_data_df, run_data_df, woba_weights))
+    return parsed_team, player_dicts
+    
 
-    extract_team_data_by_date(team, date, pa_data_df, br_data_df, game_data_df, run_data_df, woba_weights)
+def get_rosters(year):
+    rosters = {}
+    roster_files = set([])
+    game_files = set([])
+    data_zip, data_td = extract_game_data_by_year(str(year))
+    
+    f = []
+    for (dirpath, dirnames, filenames) in walk(data_td):
+        f.extend(filenames)
+        break
+    shutil.rmtree(data_td)
+    print(f)
+    for team_file in f:
+        if team_file[-4:] == '.ROS':
+            print('roster', team_file)
+            roster_files.add(team_file)
+    
+    for team in roster_files:
+        rosters.update(extract_roster(team, data_zip))
+    
+    return rosters
+
+def load(results):
+    '''
+    load all of the player data into the SQL database
+    @param results - dictionary of lists of dictionaries containing all the individual player rows of data
+    '''
+    DEADLINEBASE.metadata.create_all(tables=[x.__table__ for x in MODELS], checkfirst=True)
+    session = get_session(1)
+    for model in MODELS:
+        data = results[model.__tablename__]
+        i = 0
+        # Here is where we convert directly the dictionary output of our marshmallow schema into sqlalchemy
+        objs = []
+        for row in data:
+            if i % 1000 == 0:
+                print('loading...', i)
+            i+=1
+            #objs.append(model(**row))
+            session.merge(model(**row))
+        
+        #session.bulk_save_objects(objs)
+    session.commit()
 
 def main():
-
+    rows = {table: [] for table in ['Player', 'Team']}
     opts, args = getopt.getopt(sys.argv[1:], 'y:t:d:p:')
     team = ''
-    date = '2019-12-31'
+    date = datetime.datetime.strptime('2019-07-31','%Y-%m-%d')
     player = ''
     for o, a in opts:
         if o == '-t':
@@ -277,11 +339,17 @@ def main():
             date = datetime.datetime.strptime(a, '%Y-%m-%d')
         if o == '-p':
             player = a
+    rosters = get_rosters(date.year)
     if player != '':
         query_player_data_by_date(date, player, team)
     else:
-        query_team_data_by_date(date, team)
+        for team in team_set:
+            print(team)
+            parsed_team, parsed_players = query_team_data_by_date(date, team, rosters[team])
 
+            rows['Player'].extend(parsed_players)
+            rows['Team'].append(parsed_team)
+    load(rows)
 #query_player_data_by_date(datetime.datetime.strptime('2019-05-01', '%Y-%m-%d'), 'harpb003', 'PHI')
 start = time.time()
 main()

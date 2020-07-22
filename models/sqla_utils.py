@@ -5,8 +5,8 @@ from sqlalchemy.orm import Session
 import os
 #from marshmallow_schemas.schema_utils import password
 
-
 ENGINE = create_engine('mysql+pymysql://warofthewrens:DeJesus18Carlton32@35.245.199.134:3306/retrosheet', echo=False)
+DEADLINE_ENGINE = create_engine('mysql+pymysql://warofthewrens:DeJesus18Carlton32@35.245.199.134:3306/trade_deadline', echo=False)
 PLAYOFF_ENGINE = create_engine('mysql+pymysql://warofthewrens:DeJesus18Carlton32@35.245.199.134:3306/playoffs', echo=False)
 
 engine = create_engine("sqlite:///myexample.db")  # Access the DB Engine
@@ -14,6 +14,7 @@ if not engine.dialect.has_table(engine, 'PlateAppearance'):  # If table don't ex
     metadata = MetaData(engine)
     # Create a table with the appropriate Columns
 BASE = declarative_base(bind=ENGINE)
+DEADLINEBASE = declarative_base(bind=DEADLINE_ENGINE)
 PLAYOFFBASE = declarative_base(bind=PLAYOFF_ENGINE)
 
 # taken from https://docs.sqlalchemy.org/en/13/core/pooling.html
@@ -32,12 +33,14 @@ def checkout(dbapi_connection, connection_record, connection_proxy):
                 (connection_record.info['pid'], pid)
         )
 
-def get_session(is_playoff=False):
+def get_session(engine_no = 0):
     '''
     gets a sqlalchemy session -- useful for interfacing with the database
     Docs: https://docs.sqlalchemy.org/en/13/orm/session.html
 
     '''
-    if is_playoff:
+    if engine_no == 2:
         return Session(bind=PLAYOFF_ENGINE)
+    elif engine_no == 1:
+        return Session(bind=DEADLINE_ENGINE)
     return Session(bind=ENGINE)
