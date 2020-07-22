@@ -18,4 +18,15 @@ module.exports = class playerController{
             })
         })
     }
+
+    listUniqueNames(team){
+        return new Promise((resolve, reject)=>{
+            Player.findUniqueNames(team, (err, res) =>{
+                if(err){
+                    reject(err)
+                }
+                resolve(res);
+            })
+        })
+    }
 }

@@ -79,4 +79,15 @@ Player.findPlayersByTeam = function(team){
     })
 }
 
+Player.findUniqueNames = function(team){
+    return new Promise((resolve, reject) =>{
+    mysqlConn.query("SELECT DISTINCT player_name FROM retrosheet.Player where team=?", team, (err, res)=>{
+        if(err){
+            reject(err);
+        }else{
+            resolve(res);
+        }
+    })
+})
+}
 module.exports = Player;
