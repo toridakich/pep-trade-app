@@ -59,7 +59,7 @@ var Player = function(player){
     this.WAR = player.WAR;
 }
 Player.findAllPlayers = function(result){
-    mysqlConn.query("SELECT * FROM retrosheet.Player", function(err, res){
+    mysqlConn.query("SELECT * FROM trade_deadline.Player", function(err, res){
         if(err){
             result(err, null);
         } else{
@@ -69,7 +69,7 @@ Player.findAllPlayers = function(result){
 }
 Player.findPlayersByTeam = function(team){
     return new Promise((resolve, reject)=>{
-        mysqlConn.query("Select * from retrosheet.Player where team=?", team, (err,res)=>{
+        mysqlConn.query("Select * from trade_deadline.Player where team=?", team, (err,res)=>{
             if(err){
                 reject(err);
             }else{
@@ -81,7 +81,7 @@ Player.findPlayersByTeam = function(team){
 
 Player.findUniqueNames = function(team){
     return new Promise((resolve, reject) =>{
-    mysqlConn.query("SELECT DISTINCT player_name FROM retrosheet.Player where team=?", team, (err, res)=>{
+    mysqlConn.query("SELECT DISTINCT player_name FROM trade_deadline.Player where team=?", team, (err, res)=>{
         if(err){
             reject(err);
         }else{
