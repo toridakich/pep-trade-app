@@ -3,3 +3,9 @@ input{
     height: 20px;
     border: none;
 }
+
+.del{
+    display: inline-block;
+    margin: 0;
+}
+

@@ -14,13 +14,13 @@ class PlayerInput extends Component {
         this.setState({
           name: event.target.value
         })
-        
+        this.props.addSelected(event.target.value);
       }
 
 
 
     render(){
-        var distinctNames = [...new Set(this.props.players.map(x => x.player_name))]
+        var distinctNames = [...new Set(this.props.players.map(x => x.name))]
        // if(this.props.playing){
         
         return(
@@ -32,8 +32,10 @@ class PlayerInput extends Component {
             //         onChange={() => this.handleInputChange}
             //         />
             // </label>
-            
+            <div className='pinp'>
+                <button type="button" className="del" onClick={this.props.delete}>x</button>
             <select className="custom-select"
+                id='this'
                 value={this.state.name} 
                 onChange={this.handleChange}
                  
@@ -42,8 +44,10 @@ class PlayerInput extends Component {
             {distinctNames.map((team) =>(
                 <option value={team}>{team}</option>
             ))}
+            
             </select>
-        
+            
+            </div>
          )
     }
 }

@@ -8,7 +8,7 @@ body{
 .teamBars{
   
   margin-top: 200px;
-  margin-left: 200px;
+  margin-left: 400px;
   float: left;
   
   
@@ -16,7 +16,7 @@ body{
 
 .t2{
   margin-top: 200px;
-  margin-right: 200px;
+  margin-right: 450px;
   float: right;
 }
 
@@ -32,5 +32,53 @@ body{
 
 #individies{
   margin-bottom: 5px;
+}
+
+button{
+  background-color: orange;
+  border: none;
+  
+}
+
+.popup{
+  position: fixed;  
+  width: 50%;  
+  height: 85%;  
+  top: 0;  
+  left: 0;  
+  right: 0;  
+  bottom: 0;  
+  margin: auto;  
+  background-color:white; 
+  border-radius: 25px;
+  overflow:auto;
+  text-align: center;
+  
+  
+}
+
+.teamOne{
+  float: left;
+  margin-left: 100px;
+}
+.teamTwo{
+  float: right;
+  margin-right: 100px;
+}
+
+.close{
+  background-color: white;
+  position: absolute;
+  right: 20px;
+  top: 10px;
+}
+
+.main{
+  margin-bottom: 20px;
+}
+
+.totals{
+  position: relative;
+  margin-top: 10px;
 }
 

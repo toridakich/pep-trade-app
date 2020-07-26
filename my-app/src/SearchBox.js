@@ -5,10 +5,11 @@ class SearchBox extends Component {
     constructor(props){
         super(props);
         this.state={
-            selected: null
+            selected: null,
+            weight: "tanking"
         }
         this.handleChange = this.handleChange.bind(this);
-        
+        this.handleChangeWeight = this.handleChangeWeight.bind(this);
     }
 
     handleChange(event){
@@ -16,6 +17,13 @@ class SearchBox extends Component {
           selected: event.target.value
         })
         this.props.action(event.target.value)
+      }
+
+      handleChangeWeight(event){
+        this.setState({
+          weight: event.target.value
+        })
+        this.props.changeWeight(event.target.value)
       }
 
       toggleList(){
@@ -53,9 +61,11 @@ class SearchBox extends Component {
           'TEX',
           'TOR',
           'WAS'];
+          const weights = ['tanking', 'win now']
           return(
-              
+             <div>
             <select className="custom-select"
+                id= "teamSearch"
                 value={this.state.selected} 
                 onChange={this.handleChange}
                  
@@ -63,8 +73,19 @@ class SearchBox extends Component {
             {list.map((team) =>(
                 <option value={team}>{team}</option>
             ))}
-            </select>
+            </select><br></br>
+              <select className="custom-select"
+              value={this.state.weight} 
+              onChange={this.handleChangeWeight}
+              
+          >
+          {weights.map((team) =>(
+              <option value={team}>{team}</option>
+          ))}
           
+      </select>
+      
+      </div> 
           )
       }
 }
