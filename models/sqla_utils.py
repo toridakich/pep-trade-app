@@ -5,9 +5,12 @@ from sqlalchemy.orm import Session
 import os
 #from marshmallow_schemas.schema_utils import password
 
+
 ENGINE = create_engine('mysql+pymysql://warofthewrens:DeJesus18Carlton32@35.245.199.134:3306/retrosheet', echo=False)
 DEADLINE_ENGINE = create_engine('mysql+pymysql://warofthewrens:DeJesus18Carlton32@35.245.199.134:3306/trade_deadline', echo=False)
 PLAYOFF_ENGINE = create_engine('mysql+pymysql://warofthewrens:DeJesus18Carlton32@35.245.199.134:3306/playoffs', echo=False)
+PROSPECT_ENGINE = create_engine('mysql+pymysql://warofthewrens:DeJesus18Carlton32@35.245.199.134:3306/prospects', echo=False)
+PREDICTION_ENGINE = create_engine('mysql+pymysql://warofthewrens:DeJesus18Carlton32@35.245.199.134:3306/predictions', echo=False)
 
 engine = create_engine("sqlite:///myexample.db")  # Access the DB Engine
 if not engine.dialect.has_table(engine, 'PlateAppearance'):  # If table don't exist, Create.
@@ -16,6 +19,7 @@ if not engine.dialect.has_table(engine, 'PlateAppearance'):  # If table don't ex
 BASE = declarative_base(bind=ENGINE)
 DEADLINEBASE = declarative_base(bind=DEADLINE_ENGINE)
 PLAYOFFBASE = declarative_base(bind=PLAYOFF_ENGINE)
+PROSPECTBASE = declarative_base(bind=PROSPECT_ENGINE)
 
 # taken from https://docs.sqlalchemy.org/en/13/core/pooling.html
 @event.listens_for(engine, "connect")
@@ -39,7 +43,9 @@ def get_session(engine_no = 0):
     Docs: https://docs.sqlalchemy.org/en/13/orm/session.html
 
     '''
-    if engine_no == 2:
+    if engine_no == 3:
+        return Session(bind=PROSPECT_ENGINE)
+    elif engine_no == 2:
         return Session(bind=PLAYOFF_ENGINE)
     elif engine_no == 1:
         return Session(bind=DEADLINE_ENGINE)
