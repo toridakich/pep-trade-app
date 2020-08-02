@@ -1,0 +1,11 @@
+
+    /* The container must be positioned relative: */
+.custom-select {
+    width: 200px;
+    height: 30px;
+    border-radius: 10px;
+  }
+  
+#teamSearch{
+    margin-bottom: 20px;
+}
