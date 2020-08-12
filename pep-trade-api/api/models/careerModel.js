@@ -11,7 +11,7 @@ var Career = function(career){
 }
 
 Career.getAll = function(result){
-    mysqlConn.query("SELECT * FROM predictions.mlb_final_preds", function(err, res){
+    mysqlConn.query("SELECT * FROM predictions.final", function(err, res){
         if(err){
             result(err, null);
         } else{
