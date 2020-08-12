@@ -5,14 +5,16 @@ import SearchBox from './SearchBox';
 import PlayerInput from './PlayerInput';
 import Predictions from './Predictions';
 
+
+
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
       team1Inputs: ['input-0'],
       team2Inputs: ['input-0'],
-      team1Players: [],
-      team2Players: [],
+      team1Players: [''],
+      team2Players: [''],
       team1: 'ANA',
       team2: 'ANA',
       showPop: null,
@@ -47,6 +49,62 @@ class App extends Component {
     this.getDiscreps = this.getDiscreps.bind(this);
     this.setPlayer1Data = this.setPlayer1Data.bind(this);
     this.setPlayer2Data = this.setPlayer2Data.bind(this);
+    this.clearList1 = this.clearList1.bind(this);
+    this.clearList2 = this.clearList2.bind(this);
+    this.clearInput1 = this.clearInput1.bind(this);
+    this.clearInput2 = this.clearInput2.bind(this);
+    this.updateList1 = this.updateList1.bind(this);
+    this.updateList2 = this.updateList2.bind(this);
+  }
+  updateList1(index, name){
+   let players = [...this.state.selectedTeam1Players];
+   
+   players[index] = name;
+   this.setState({
+     selectedTeam1Players: players
+   })
+  }
+  updateList2(index, name){
+    let players = [...this.state.selectedTeam2Players];
+    
+    players[index] = name;
+    this.setState({
+      selectedTeam2Players: players
+    })
+   }
+
+  clearList1(){
+    this.setState({
+      selectedTeam1Players: [],
+      team1Score: 0,
+      player1Data: [],
+      localScore1: 0,
+      team1Discrep: 0,
+      
+    })
+  }
+
+  clearList2(){
+    this.setState({
+      selectedTeam2Players: [],
+      team2Score: 0,
+      player2Data: [],
+      localScore2: 0,
+      team2Discrep: 0,
+    })
+  }
+
+  clearInput1(){
+    this.setState({
+      team1Inputs: ['input-0'],
+      team1MInput: ['input-0']
+    })
+  }
+
+  clearInput2(){
+    this.setState({
+      team2Inputs: ['input-0']
+    })
   }
 
   setPlayer1Data(data){
@@ -111,17 +169,27 @@ class App extends Component {
     this.setState(prevState => ({ team2Inputs: prevState.team2Inputs.concat(newInput) }));
   }
 
-  removePlayer1() {
-
+  removePlayer1(name, index) {
+    console.log(index);
     this.setState({
-      team1Inputs: this.state.team1Inputs.filter((_, i) => i !== this.state.team1Inputs.length - 1)
+      team1Inputs: this.state.team1Inputs.filter((_, i) => i !== index),
+      selectedTeam1Players: this.state.selectedTeam1Players.filter(function(player){
+        console.log(player);
+        return player !== name
+      })
     });
-  }
+    
+    
+  } 
 
-  removePlayer2() {
+  removePlayer2(name, index) {
 
     this.setState({
-      team2Inputs: this.state.team2Inputs.filter((_, i) => i !== this.state.team2Inputs.length - 1)
+      team2Inputs: this.state.team2Inputs.filter((_, i) => i !== index),
+      selectedTeam2Players: this.state.selectedTeam2Players.filter(function(player){
+        console.log(player);
+        return player !== name
+      })
     });
   }
 
@@ -180,6 +248,7 @@ class App extends Component {
         }
 
       });
+      
 
     const team2 = {
       "team": currentComponent.state.team2
@@ -200,6 +269,7 @@ class App extends Component {
           })
         }
       });
+
 
   }
 
@@ -229,7 +299,7 @@ class App extends Component {
           }
 
         });
-        
+
       
     }
     const team2 = {
@@ -251,9 +321,10 @@ class App extends Component {
             })
           }
         });
-        
+
     }
-    if(currentComponent.state.player2Data != prevState.player2Data || currentComponent.state.player1Data != prevState.player1Data){
+    
+    if(currentComponent.state.player2Data != prevState.player2Data || currentComponent.state.player1Data != prevState.player1Data || currentComponent.state.showPop != prevState.showPop){
       var score1 = 0;
       console.log(this.state.team1Weight)
       if(currentComponent.state.team1Weight === "tanking"){
@@ -275,13 +346,13 @@ class App extends Component {
         }
     }
     var score2=0
-    if(currentComponent.state.team2Weight === "tanking"){
+    if(currentComponent.state.team2Weight === "tanking" && this.state.player1Data != undefined && this.state.player2Data != undefined){
       
       for(var i=0; i < this.state.player2Data.length; i++){
           
           score2 = score2 - this.state.player2Data[i].score_rebuild
       }
-      for(var k=0; k<this.state.player2Data.length; ++k){
+      for(var k=0; k<this.state.player1Data.length; ++k){
         score2 = score2 + this.state.player1Data[k].score_rebuild
       }
   } else{
@@ -324,39 +395,45 @@ class App extends Component {
 
   render() {
     console.log(this.state.selectedTeam1Players)
-    console.log(this.state.team1Weight)
+    console.log(this.state.team1Inputs)
+    
     return (
       <div className="App">
 
         <div className="teamBars">
           <h1>Team 1:</h1>
           
-          <SearchBox action={this.getTeam1} changeWeight={this.change1Weight} />
+          <SearchBox action={this.getTeam1} changeWeight={this.change1Weight} clearList={this.clearList1} clearInput={this.clearInput1}/>
           <p>Players:</p>
           <div className="dynamicInput">
-            {this.state.team1Inputs.map(team1Input =>
+            {this.state.team1Inputs.map((team1Input, index) =>
               <div id="individies">
-                <PlayerInput key={team1Input} players={this.state.team1Players} delete={this.removePlayer1} addSelected={this.addSelectedPlayer1} />
+                <PlayerInput key={team1Input} identify={index} players={this.state.team1Players} delete={this.removePlayer1} addSelected={this.addSelectedPlayer1} name={this.state.selectedTeam1Players[index]} update={this.updateList1}/>
               </div>)}
           </div>
           <div className='add'>
             <button type='button' onClick={this.addPlayer1}>Add Player</button>
           </div>
+
         </div>
+
         <div className="t2">
           <h1>Team 2:</h1>
     
-          <SearchBox action={this.getTeam2} changeWeight={this.change2Weight} />
+          <SearchBox action={this.getTeam2} changeWeight={this.change2Weight} clearList={this.clearList2} clearInput={this.clearInput2}/>
           <p>Players:</p>
           <div className="dynamicInput">
-            {this.state.team2Inputs.map(team2Input =>
+            {this.state.team2Inputs.map((team2Input, index) =>
+              
               <div id='individies'>
-                <PlayerInput key={team2Input} players={this.state.team2Players} delete={this.removePlayer2} addSelected={this.addSelectedPlayer2} />
+                
+                <PlayerInput key={team2Input} identify={index} players={this.state.team2Players} delete={this.removePlayer2} addSelected={this.addSelectedPlayer2} name={this.state.selectedTeam2Players[index]} update={this.updateList2}/>
               </div>)}
           </div>
           <div className='add'>
             <button type='button' onClick={this.addPlayer2}>Add Player</button>
           </div>
+          
 
         </div>
         <div className="submit">

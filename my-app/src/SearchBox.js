@@ -16,7 +16,9 @@ class SearchBox extends Component {
         this.setState({
           selected: event.target.value
         })
-        this.props.action(event.target.value)
+        this.props.action(event.target.value);
+        this.props.clearList();
+        this.props.clearInput();
       }
 
       handleChangeWeight(event){

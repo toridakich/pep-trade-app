@@ -6,7 +6,7 @@ class PlayerInput extends Component {
     constructor(props){
         super(props);
         this.state={
-            name: undefined
+            name: this.props.name
         }
         this.handleChange = this.handleChange.bind(this);
     }
@@ -15,35 +15,34 @@ class PlayerInput extends Component {
           name: event.target.value
         })
         this.props.addSelected(event.target.value);
+        this.props.update(this.props.identify, event.target.value)
       }
 
 
 
     render(){
         var distinctNames = [...new Set(this.props.players.map(x => x.name))]
-       // if(this.props.playing){
+        distinctNames.sort();
+        let list = distinctNames.map((team) => {
+            return (
+              <option value={team}>{team}</option>
+            )
+          })
         
         return(
-            // <label>
-            //         <input
-            //         name="player1"
-            //         type="text"
-            //         value={this.state.name}
-            //         onChange={() => this.handleInputChange}
-            //         />
-            // </label>
+            
             <div className='pinp'>
-                <button type="button" className="del" onClick={this.props.delete}>x</button>
+                <button type="button" className="del" onClick={()=>this.props.delete(this.state.name, this.props.identify)}>x</button>
             <select className="custom-select"
                 id='this'
                 value={this.state.name} 
                 onChange={this.handleChange}
-                 
+                placeholder=' '
             >
             
-            {distinctNames.map((team) =>(
-                <option value={team}>{team}</option>
-            ))}
+            <option value="none" selected disabled hidden> 
+            </option> 
+            {list}
             
             </select>
             

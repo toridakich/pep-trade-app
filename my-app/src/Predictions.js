@@ -77,16 +77,18 @@ class Predictions extends Component{
                     <div key={key}>
                         <h3>{stat.name}</h3>
                     <h5>Value left on contract: </h5>
-                    <div>{stat.remain_war}</div>
+                    <div>{Math.floor(stat.remain_war * 100) / 100} WAR</div>
                     <h5>Value until end of year: </h5>
-                    <div>{stat.predicted_remaining}</div>
-                    <h5>Score: </h5>
-                {this.props.weight === "tanking" ? <div>{stat.score_rebuild}</div>: <div>{stat.score_now}</div>}
+                    <div>{Math.floor(stat.predicted_remaining * 100) / 100} WAR</div>
+                    <h5>PEP Score: </h5>
+                    <div>Tanking: {Math.floor(stat.score_rebuild * 100) / 100}</div>
+                    <div>Win Now: {Math.floor(stat.score_now * 100) / 100}</div>
+                {/* {this.props.weight === "tanking" ? <div>{Math.floor(stat.score_rebuild * 100) / 100}</div>: <div>{Math.floor(stat.score_now * 100) / 100}</div>} */}
             </div>
 
                 ))}
                 <h4>Total Score: </h4>
-                <div>{this.props.localScore}</div>
+                <div className="fin">{Math.floor(this.props.localScore * 100) / 100}</div>
             </div>
         )
     }
